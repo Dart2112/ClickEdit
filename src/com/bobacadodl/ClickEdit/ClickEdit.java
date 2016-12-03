@@ -23,6 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * User: bobacadodl
@@ -44,16 +45,6 @@ public class ClickEdit extends JavaPlugin implements Listener {
             reloadConfig();
         }
         command_only = getConfig().getBoolean("command-only");
-        enable_updater = getConfig().getBoolean("enable-updater");
-        if (enable_updater) {
-            Updater updater = new Updater(this, PLUGIN_ID, this.getFile(), Updater.UpdateType.DEFAULT, false);
-        }
-        try {
-            Metrics metrics = new Metrics(this);
-            metrics.start();
-        } catch (IOException ex) {
-            getLogger().severe("Failed to enable metrics!");
-        }
     }
 
     public void onDisable() {
@@ -105,7 +96,7 @@ public class ClickEdit extends JavaPlugin implements Listener {
                                 p.sendMessage(ChatColor.RED + "You do not have permission! (clickedit.edit)");
                                 return true;
                             }
-                            Block block = p.getTargetBlock(null, 8);
+                            Block block = p.getTargetBlock((Set<Material>) null, 8);
                             if (isSign(block)) {
                                 Sign sign = (Sign) block.getState();
                                 editSign(sign, p, sign.getLines());
@@ -128,7 +119,7 @@ public class ClickEdit extends JavaPlugin implements Listener {
                                     int line = Integer.parseInt(args[1]) - 1;
                                     if (line >= 0 && line < 4) {
                                         String text = StringUtils.join(args, ' ', 2, args.length);
-                                        Block block = p.getTargetBlock(null, 8);
+                                        Block block = p.getTargetBlock((Set<Material>) null, 8);
                                         if (isSign(block)) {
                                             Sign sign = (Sign) block.getState();
                                             editSign(sign, p, line, text);
